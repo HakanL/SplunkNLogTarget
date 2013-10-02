@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplunkNLogTarget", "SplunkNLogTarget\SplunkNLogTarget.csproj", "{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleExample", "ConsoleExample\ConsoleExample.csproj", "{F8B6B152-77A1-44DB-99BD-48A0AF31F057}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -13,6 +15,10 @@ Global
 		{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F8B6B152-77A1-44DB-99BD-48A0AF31F057}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F8B6B152-77A1-44DB-99BD-48A0AF31F057}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F8B6B152-77A1-44DB-99BD-48A0AF31F057}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F8B6B152-77A1-44DB-99BD-48A0AF31F057}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
