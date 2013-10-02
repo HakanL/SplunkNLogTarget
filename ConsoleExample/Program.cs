@@ -12,12 +12,16 @@ namespace Haukcode.ConsoleExample
 
         public static void Main(string[] args)
         {
+            NLog.MappedDiagnosticsContext.Set("SessionId", Guid.NewGuid().ToString("n"));
+            NLog.MappedDiagnosticsContext.Set("MessageId", Guid.NewGuid().ToString("n"));
+
             log.Info("Basic logging");
 
             using (Log.Context(log, "Main"))
             {
-                log.Info("In context");
+                log.Info("In Main context");
 
+                LogManager.Flush();
                 TestFunction("TestArg");
             }
 
@@ -35,7 +39,7 @@ namespace Haukcode.ConsoleExample
 
                 log.Warn("Warning caution!");
 
-                System.Threading.Thread.Sleep(1000);
+                System.Threading.Thread.Sleep(1000 + (new Random()).Next(1000));
 
                 log.Debug("Done...");
             }

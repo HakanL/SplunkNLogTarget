@@ -29,7 +29,7 @@ namespace Haukcode
                 this.logger.Name,
                 string.Format("Duration {0:N1} ms", this.stopWatch.Elapsed.TotalMilliseconds));
 
-            logEvent.Properties["Duration"] = this.stopWatch.Elapsed.TotalMilliseconds.ToString("G1");
+            logEvent.Properties["DurationMS"] = this.stopWatch.Elapsed.TotalMilliseconds.ToString("F1");
             this.logger.Log(logEvent);
 
             this.ndc.Dispose();
