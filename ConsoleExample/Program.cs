@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using NLog;
 
-namespace Haukcode.ConsoleApplication1
+namespace Haukcode.ConsoleExample
 {
     public class Program
     {
