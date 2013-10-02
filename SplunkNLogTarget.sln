@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 2012
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SplunkNLogTarget", "SplunkNLogTarget\SplunkNLogTarget.csproj", "{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{038BC3A0-30E5-4C5F-A01C-6DE26F854DFA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
