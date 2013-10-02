@@ -6,14 +6,6 @@ using NLog;
 
 namespace Haukcode
 {
-    public static class Log
-    {
-        public static LogContext Context(Logger logger, string context)
-        {
-            return new LogContext(logger, context);
-        }
-    }
-
     public class LogContext : IDisposable
     {
         private IDisposable ndc;
