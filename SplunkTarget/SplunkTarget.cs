@@ -161,6 +161,10 @@ namespace Haukcode.SplunkNLogTarget
             sb.Append(System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
             sb.Append("\",");
 
+            sb.Append("\"Logger\":\"");
+            sb.Append(logEvent.LoggerName);
+            sb.Append("\",");
+
             if (logEvent.Properties.ContainsKey("DurationMS"))
             {
                 sb.Append("\"DurationMS\":\"");

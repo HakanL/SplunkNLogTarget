@@ -8,7 +8,7 @@ namespace Haukcode.ConsoleExample
 {
     public class Program
     {
-        private static Logger log = LogManager.GetCurrentClassLogger();
+        private static Logger log = LogManager.GetLogger("TheName");
 
         public static void Main(string[] args)
         {
