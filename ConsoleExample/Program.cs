@@ -21,6 +21,15 @@ namespace Haukcode.ConsoleExample
             {
                 log.Info("In Main context");
 
+                string x = "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
+                x += "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
+                x += "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
+                x += "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
+                x += "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
+                x += "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
+                x += "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
+                log.Info(x);
+
                 LogManager.Flush();
                 TestFunction("TestArg");
             }

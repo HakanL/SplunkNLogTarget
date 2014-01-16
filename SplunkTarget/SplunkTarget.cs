@@ -187,7 +187,11 @@ namespace Haukcode.SplunkNLogTarget
                 sb.Append(',');
 
             sb.Append("\"Message\":\"");
-            sb.Append(logEvent.FormattedMessage.Replace("\"", "\\\""));
+            sb.Append(logEvent.FormattedMessage
+                .Replace("\"", "\\\"")
+                .Replace("\r\n", "\n")
+                .Replace("\r", "\n")
+                .Replace("\n", "\\n"));
             sb.Append("\"");
 
             sb.AppendLine("}");
