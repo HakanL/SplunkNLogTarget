@@ -41,7 +41,7 @@ namespace Haukcode.SplunkNLogTarget
 
         [RequiredParameter]
         public string ProjectId { get; set; }
-    
+
         [RequiredParameter]
         public string AccessToken { get; set; }
 
@@ -186,17 +186,44 @@ namespace Haukcode.SplunkNLogTarget
             if (!extraLayout.EndsWith(","))
                 sb.Append(',');
 
+            if (logEvent.Exception != null)
+            {
+                sb.Append("\"Exception\":\"");
+                sb.Append(EscapeMultilineMessage(logEvent.Exception.ToString()));
+                sb.Append("\",");
+
+                sb.Append("\"ExceptionType\":\"");
+                sb.Append(logEvent.Exception.GetType().Name);
+                sb.Append("\",");
+
+                sb.Append("\"ExceptionMessage\":\"");
+                sb.Append(EscapeMultilineMessage(logEvent.Exception.Message));
+                sb.Append("\",");
+
+                if (logEvent.Exception.StackTrace != null)
+                {
+                    sb.Append("\"ExceptionStack\":\"");
+                    sb.Append(EscapeMultilineMessage(logEvent.Exception.StackTrace));
+                    sb.Append("\",");
+                }
+            }
+
             sb.Append("\"Message\":\"");
-            sb.Append(logEvent.FormattedMessage
-                .Replace("\"", "\\\"")
-                .Replace("\r\n", "\n")
-                .Replace("\r", "\n")
-                .Replace("\n", "\\n"));
+            sb.Append(EscapeMultilineMessage(logEvent.FormattedMessage));
             sb.Append("\"");
 
             sb.AppendLine("}");
 
             return sb.ToString();
+        }
+
+        private string EscapeMultilineMessage(string input)
+        {
+            return input
+                .Replace("\"", "\\\"")
+                .Replace("\r\n", "\n")
+                .Replace("\r", "\n")
+                .Replace("\n", "\\n");
         }
 
         protected override void Write(NLog.Common.AsyncLogEventInfo logEvent)

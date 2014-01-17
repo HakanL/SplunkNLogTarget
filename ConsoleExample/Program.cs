@@ -30,6 +30,24 @@ namespace Haukcode.ConsoleExample
                 x += "MultiLine dslfj sdlkfj sdljfksd kjfkls djsd" + "\n" + "And the next line lsdfjkl dsfjkld sjlfkdsjf lksd\n";
                 log.Info(x);
 
+                try
+                {
+                    throw new InvalidOperationException("Not correct operation");
+                }
+                catch (Exception ex)
+                {
+                    log.ErrorException("Test of exception", ex);
+                }
+
+                try
+                {
+                    throw new AggregateException(new DivideByZeroException("Divide by 0"));
+                }
+                catch (Exception ex)
+                {
+                    log.WarnException("Test of inner exception", ex);
+                }
+
                 LogManager.Flush();
                 TestFunction("TestArg");
             }
