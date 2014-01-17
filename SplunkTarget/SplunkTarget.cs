@@ -220,6 +220,7 @@ namespace Haukcode.SplunkNLogTarget
         private string EscapeMultilineMessage(string input)
         {
             return input
+                .Replace("\\", "\\\\")
                 .Replace("\"", "\\\"")
                 .Replace("\r\n", "\n")
                 .Replace("\r", "\n")
