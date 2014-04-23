@@ -8,9 +8,9 @@ namespace Haukcode
 {
     public static class Log
     {
-        public static LogContext Context(Logger logger, string context)
+        public static LogContext Context(Logger logger, string contextName)
         {
-            return new LogContext(logger, context);
+            return new LogContext(logger, contextName);
         }
     }
 }

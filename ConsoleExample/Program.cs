@@ -6,11 +6,11 @@ using NLog;
 
 namespace Haukcode.ConsoleExample
 {
-    public class Program
+    public static class Program
     {
         private static Logger log = LogManager.GetLogger("TheName");
 
-        public static void Main(string[] args)
+        public static void Main()
         {
             NLog.MappedDiagnosticsContext.Set("SessionId", Guid.NewGuid().ToString("n"));
             NLog.MappedDiagnosticsContext.Set("MessageId", Guid.NewGuid().ToString("n"));

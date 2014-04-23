@@ -18,7 +18,7 @@
       <AnalyzerSettings>
         <CollectionProperty Name="Hungarian">
           <Value>as</Value>
-		  <Value>cs</Value>
+          <Value>cs</Value>
           <Value>db</Value>
           <Value>do</Value>
           <Value>id</Value>

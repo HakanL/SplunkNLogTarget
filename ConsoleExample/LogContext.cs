@@ -6,7 +6,7 @@ using NLog;
 
 namespace Haukcode
 {
-    public class LogContext : IDisposable
+    public sealed class LogContext : IDisposable
     {
         private IDisposable ndc;
         private Logger logger;

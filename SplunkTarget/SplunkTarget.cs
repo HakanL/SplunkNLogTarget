@@ -1,23 +1,24 @@
-﻿using NLog;
-using NLog.Config;
-using NLog.Targets;
-using NLog.Common;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Threading;
 using System.Net.Http;
 using System.Text;
+using System.Threading;
+using NLog;
+using NLog.Common;
+using NLog.Config;
+using NLog.Targets;
 
 namespace Haukcode.SplunkNLogTarget
 {
     [Target("Splunk")]
-    public sealed class SplunkTarget : TargetWithLayout
+    public class SplunkTarget : TargetWithLayout
     {
+        private static object lockObject = new object();
         private HttpClient restClient;
         private string requestUrl;
         private NLog.LayoutRenderers.NdcLayoutRenderer ndcRenderer;
-        private static object lockObject = new object();
         private Queue<string> queue;
         private ManualResetEvent sendEvent;
         private Thread sendThread;
@@ -31,9 +32,9 @@ namespace Haukcode.SplunkNLogTarget
                 Separator = "/"
             };
 
-            this.queue = new Queue<string>(MaxQueueItems);
+            this.queue = new Queue<string>(this.MaxQueueItems);
             this.sendEvent = new ManualResetEvent(false);
-            this.sendThread = new Thread(new ThreadStart(SendThread));
+            this.sendThread = new Thread(new ThreadStart(this.SendThread));
         }
 
         [RequiredParameter]
@@ -57,20 +58,22 @@ namespace Haukcode.SplunkNLogTarget
             base.InitializeTarget();
 
             var handler = new HttpClientHandler();
-            handler.Credentials = new System.Net.NetworkCredential("x", AccessToken);
+            handler.Credentials = new System.Net.NetworkCredential("x", this.AccessToken);
 
-            string baseUrl = string.Format("https://{0}", Host);
+            string baseUrl = string.Format(CultureInfo.InvariantCulture, "https://{0}", this.Host);
             this.restClient = new HttpClient(handler);
             this.restClient.Timeout = TimeSpan.FromSeconds(15);
             this.restClient.BaseAddress = new Uri(baseUrl);
 
-            this.requestUrl = string.Format("1/inputs/http?index={0}&sourcetype=json_predefined_timestamp&host={1}&source={2}",
-                ProjectId,
+            this.requestUrl = string.Format(
+                CultureInfo.InvariantCulture,
+                "1/inputs/http?index={0}&sourcetype=json_predefined_timestamp&host={1}&source={2}",
+                this.ProjectId,
                 Environment.MachineName,
-                Source);
+                this.Source);
 
-            if (!string.IsNullOrEmpty(TZ))
-                this.requestUrl += "&tz=" + TZ;
+            if (!string.IsNullOrEmpty(this.TZ))
+                this.requestUrl += "&tz=" + this.TZ;
 
             System.Net.ServicePointManager.ServerCertificateValidationCallback +=
                 (sender, certificate, chain, sslPolicyErrors) =>
@@ -85,6 +88,46 @@ namespace Haukcode.SplunkNLogTarget
                 };
 
             this.sendThread.Start();
+        }
+
+        protected override void CloseTarget()
+        {
+            this.sendThread.Abort();
+
+            base.CloseTarget();
+
+            this.restClient.Dispose();
+        }
+
+        protected override void Write(NLog.Common.AsyncLogEventInfo logEvent)
+        {
+            lock (lockObject)
+            {
+                if (this.queue.Count >= this.MaxQueueItems)
+                    return;
+
+                this.queue.Enqueue(this.SerializeLogEntry(logEvent.LogEvent));
+            }
+        }
+
+        protected override void FlushAsync(AsyncContinuation asyncContinuation)
+        {
+            this.sendEvent.Set();
+
+            base.FlushAsync(asyncContinuation);
+
+            while (this.queue.Count > 0)
+                Thread.Sleep(10);
+        }
+
+        private static string EscapeMultilineMessage(string input)
+        {
+            return input
+                .Replace("\\", "\\\\")
+                .Replace("\"", "\\\"")
+                .Replace("\r\n", "\n")
+                .Replace("\r", "\n")
+                .Replace("\n", "\\n");
         }
 
         private void SendThread()
@@ -131,22 +174,13 @@ namespace Haukcode.SplunkNLogTarget
             }
         }
 
-        protected override void CloseTarget()
-        {
-            this.sendThread.Abort();
-
-            base.CloseTarget();
-
-            this.restClient.Dispose();
-        }
-
         private string SerializeLogEntry(LogEventInfo logEvent)
         {
             var sb = new StringBuilder();
 
             sb.Append("{");
             sb.Append("\"timestamp\":\"");
-            sb.Append(logEvent.TimeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fff"));
+            sb.Append(logEvent.TimeStamp.ToString("yyyy-MM-ddTHH:mm:ss.fff", CultureInfo.InvariantCulture));
             sb.Append("\",");
 
             sb.Append("\"Level\":\"");
@@ -158,7 +192,7 @@ namespace Haukcode.SplunkNLogTarget
             sb.Append("\",");
 
             sb.Append("\"ThreadId\":\"");
-            sb.Append(System.Threading.Thread.CurrentThread.ManagedThreadId.ToString());
+            sb.Append(System.Threading.Thread.CurrentThread.ManagedThreadId.ToString(CultureInfo.InvariantCulture));
             sb.Append("\",");
 
             sb.Append("\"Logger\":\"");
@@ -183,7 +217,7 @@ namespace Haukcode.SplunkNLogTarget
             // Add anything extra, must be json-format
             string extraLayout = this.Layout.Render(logEvent).Trim().Replace('\'', '"');
             sb.Append(extraLayout);
-            if (!extraLayout.EndsWith(","))
+            if (!extraLayout.EndsWith(",", StringComparison.Ordinal))
                 sb.Append(',');
 
             if (logEvent.Exception != null)
@@ -215,37 +249,6 @@ namespace Haukcode.SplunkNLogTarget
             sb.AppendLine("}");
 
             return sb.ToString();
-        }
-
-        private string EscapeMultilineMessage(string input)
-        {
-            return input
-                .Replace("\\", "\\\\")
-                .Replace("\"", "\\\"")
-                .Replace("\r\n", "\n")
-                .Replace("\r", "\n")
-                .Replace("\n", "\\n");
-        }
-
-        protected override void Write(NLog.Common.AsyncLogEventInfo logEvent)
-        {
-            lock (lockObject)
-            {
-                if (this.queue.Count >= MaxQueueItems)
-                    return;
-
-                this.queue.Enqueue(SerializeLogEntry(logEvent.LogEvent));
-            }
-        }
-
-        protected override void FlushAsync(AsyncContinuation asyncContinuation)
-        {
-            this.sendEvent.Set();
-
-            base.FlushAsync(asyncContinuation);
-
-            while (this.queue.Count > 0)
-                Thread.Sleep(10);
         }
     }
 }
