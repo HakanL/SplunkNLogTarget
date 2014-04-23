@@ -2,7 +2,7 @@
 <package >
   <metadata>
     <id>SplunkNLogTarget</id>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <title>Splunk NLog Target</title>
     <authors>Hakan Lindestaf</authors>
     <projectUrl>https://github.com/HakanL/SplunkNLogTarget</projectUrl>
