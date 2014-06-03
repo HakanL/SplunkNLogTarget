@@ -2,16 +2,16 @@
 <package >
   <metadata>
     <id>SplunkNLogTarget</id>
-    <version>1.1.2</version>
+    <version>1.1.3</version>
     <title>Splunk NLog Target</title>
     <authors>Hakan Lindestaf</authors>
     <projectUrl>https://github.com/HakanL/SplunkNLogTarget</projectUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>NLog target to log directly to Splunk and Splunk Storm via REST api. Runs a background thread that uploads log entries in batches.</description>
     <summary>NLog target for Splunk and Splunk Storm</summary>
-    <releaseNotes>Fixed another issue with escaping of backslash</releaseNotes>
+    <releaseNotes>1.1.3 - Unwrapped AggregateExceptions</releaseNotes>
     <copyright>(C) Copyright 2014 Hakan Lindestaf</copyright>
     <language>en-US</language>
-    <tags>nlog splunk</tags>
+    <tags>nlog splunk splunkstorm</tags>
   </metadata>
 </package>

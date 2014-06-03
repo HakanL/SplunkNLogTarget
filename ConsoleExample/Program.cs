@@ -45,6 +45,15 @@ namespace Haukcode.ConsoleExample
                 }
                 catch (Exception ex)
                 {
+                    log.WarnException("Test of aggregate exception", ex);
+                }
+
+                try
+                {
+                    throw new Exception("Test of inner", new DivideByZeroException("Divide by 0"));
+                }
+                catch (Exception ex)
+                {
                     log.WarnException("Test of inner exception", ex);
                 }
 

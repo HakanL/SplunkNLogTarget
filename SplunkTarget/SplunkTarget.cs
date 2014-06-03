@@ -226,18 +226,42 @@ namespace Haukcode.SplunkNLogTarget
                 sb.Append(EscapeMultilineMessage(logEvent.Exception.ToString()));
                 sb.Append("\",");
 
+                string exceptionType;
+                string exceptionMessage;
+                string exceptionStack;
+
+                AggregateException aggregateException = logEvent.Exception as AggregateException;
+                if (aggregateException != null && aggregateException.InnerExceptions.Count == 1)
+                {
+                    // Special case for when we have the exception wrapped in an AggregateException but there's only one inner exception
+                    var firstException = aggregateException.InnerExceptions.First();
+
+                    exceptionType = firstException.GetType().Name;
+                    exceptionMessage = firstException.Message;
+                    exceptionStack = firstException.StackTrace;
+
+                    if (exceptionStack == null)
+                        exceptionStack = logEvent.Exception.StackTrace;
+                }
+                else
+                {
+                    exceptionType = logEvent.Exception.GetType().Name;
+                    exceptionMessage = logEvent.Exception.Message;
+                    exceptionStack = logEvent.Exception.StackTrace;
+                }
+
                 sb.Append("\"ExceptionType\":\"");
-                sb.Append(logEvent.Exception.GetType().Name);
+                sb.Append(exceptionType);
                 sb.Append("\",");
 
                 sb.Append("\"ExceptionMessage\":\"");
-                sb.Append(EscapeMultilineMessage(logEvent.Exception.Message));
+                sb.Append(EscapeMultilineMessage(exceptionMessage));
                 sb.Append("\",");
 
-                if (logEvent.Exception.StackTrace != null)
+                if (exceptionStack != null)
                 {
                     sb.Append("\"ExceptionStack\":\"");
-                    sb.Append(EscapeMultilineMessage(logEvent.Exception.StackTrace));
+                    sb.Append(EscapeMultilineMessage(exceptionStack));
                     sb.Append("\",");
                 }
             }
